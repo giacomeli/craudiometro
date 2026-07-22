@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Screen.h"
+#include "ScreenChrome.h"
 
 /* Craudinho, releitura pixel-art do mascote do Claude Code.
  *
@@ -23,6 +24,7 @@ private:
     void nextFrame();
     static void timerCb(lv_timer_t *timer);
 
+    ScreenChrome chrome_;
     lv_obj_t *image_ = nullptr;
     lv_obj_t *captionLabel_ = nullptr;
     lv_timer_t *animTimer_ = nullptr;

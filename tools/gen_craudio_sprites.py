@@ -31,12 +31,15 @@ PALETTE = {
 }
 
 
-def compose(arms: str, eyes: str, legs_phase: int, bob: int) -> list:
+def compose(arms: str, eyes: str, legs_phase: int, bob: int,
+            squash: bool = False) -> list:
     """Monta a grade 16x16 do Craudinho (corpo retangular, olhos verticais,
     bracos laterais com degrau e quatro pernas).
 
     arms: "up" ou "down"; eyes: "open", "blink" ou "closed";
-    legs_phase: 0/1 alterna as pernas; bob: deslocamento vertical do corpo.
+    legs_phase: 0/1 alterna as pernas; bob: deslocamento vertical do corpo;
+    squash: abaixa so o TOPO do corpo em 1 celula (respiracao do sono, sem
+    deslocar o corpo inteiro).
     """
     grid = [["."] * GRID for _ in range(GRID)]
 
@@ -51,15 +54,17 @@ def compose(arms: str, eyes: str, legs_phase: int, bob: int) -> list:
                 put(x, y, ch)
 
     # Corpo: retangulo unico (cabeca + tronco), x=4..11, y=3..10.
-    rect(4, 3, 11, 10, "B")
+    body_top = 4 if squash else 3
+    rect(4, body_top, 11, 10, "B")
 
-    # Olhos verticais (1x2) sobre o corpo.
+    # Olhos verticais (1x2) sobre o corpo, acompanhando o squash.
+    eye_top = body_top + 1
     if eyes == "open":
-        rect(6, 4, 6, 5, "P")
-        rect(9, 4, 9, 5, "P")
+        rect(6, eye_top, 6, eye_top + 1, "P")
+        rect(9, eye_top, 9, eye_top + 1, "P")
     else:  # blink/closed: linha unica
-        put(6, 5, "P")
-        put(9, 5, "P")
+        put(6, eye_top + 1, "P")
+        put(9, eye_top + 1, "P")
 
     # Bracos laterais com degrau externo mais baixo (mao).
     arm_top = 4 if arms == "up" else 6
@@ -78,7 +83,7 @@ def compose(arms: str, eyes: str, legs_phase: int, bob: int) -> list:
 
 FRAMES = {
     "sleep_0": compose("down", "closed", 0, 1),
-    "sleep_1": compose("down", "closed", 0, 2),
+    "sleep_1": compose("down", "closed", 0, 1, squash=True),
     "idle_0": compose("down", "open", 0, 0),
     "idle_1": compose("down", "blink", 0, 0),
     "normal_0": compose("up", "open", 0, 0),

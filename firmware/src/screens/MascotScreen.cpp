@@ -25,18 +25,22 @@ const MoodSpec kMoods[] = {
 
 void MascotScreen::create() {
     initRoot();
+    lv_obj_remove_flag(root_, LV_OBJ_FLAG_SCROLLABLE);
+
+    chrome_.create(root_);
 
     image_ = lv_image_create(root_);
     lv_image_set_src(image_, kCraudioSleep[0]);
-    lv_obj_align(image_, LV_ALIGN_CENTER, 0, -30);
+    lv_obj_align(image_, LV_ALIGN_CENTER, 0, -14);
 
     captionLabel_ = lv_label_create(root_);
     lv_label_set_text(captionLabel_, "");
     lv_obj_set_style_text_opa(captionLabel_, LV_OPA_60, 0);
-    lv_obj_align(captionLabel_, LV_ALIGN_CENTER, 0, 60);
+    lv_obj_align(captionLabel_, LV_ALIGN_CENTER, 0, 72);
 }
 
 void MascotScreen::onShow() {
+    chrome_.onShow();
     if (animTimer_ == nullptr) {
         animTimer_ = lv_timer_create(timerCb, kMoods[0].intervalMs, this);
     }
@@ -44,6 +48,7 @@ void MascotScreen::onShow() {
 }
 
 void MascotScreen::onHide() {
+    chrome_.onHide();
     if (animTimer_ != nullptr) {
         lv_timer_delete(animTimer_);
         animTimer_ = nullptr;
@@ -52,6 +57,7 @@ void MascotScreen::onHide() {
 
 void MascotScreen::onStateChanged() {
     applyMood(moodFromState());
+    chrome_.refresh();
 }
 
 MascotScreen::Mood MascotScreen::moodFromState() const {

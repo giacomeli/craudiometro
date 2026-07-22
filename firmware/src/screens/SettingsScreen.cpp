@@ -81,7 +81,7 @@ void SettingsScreen::create() {
     /* Timeout de tela. */
     lv_obj_t *timeoutRow = makeRow(panel, "timeout de tela");
     lv_obj_t *dropdown = lv_dropdown_create(timeoutRow);
-    lv_dropdown_set_options(dropdown, "desligado\n1 min\n5 min\n15 min");
+    lv_dropdown_set_options(dropdown, "sempre acesa\n1 min\n5 min\n15 min");
     lv_dropdown_set_selected(dropdown, Settings::instance().screenTimeoutIdx());
     lv_obj_set_width(dropdown, 110);
     lv_obj_add_event_cb(dropdown, timeoutChanged, LV_EVENT_VALUE_CHANGED, nullptr);
