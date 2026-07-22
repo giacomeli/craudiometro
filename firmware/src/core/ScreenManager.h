@@ -25,6 +25,9 @@ public:
 
     void init();
     void show(Screen *screen);
+    /* Troca de tela pelo nome do registro ("menu" abre o menu global).
+     * Usado pelos comandos seriais (tools/screenshot.py). */
+    void showByName(const char *name);
     void tick();  /* chamar a cada volta do loop */
 
     Screen *const *screens() const { return screens_; }

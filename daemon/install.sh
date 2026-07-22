@@ -1,5 +1,5 @@
 #!/bin/bash
-# Instala o daemon do Craudiometro como LaunchAgent do usuario.
+# Instala o daemon do Craudiômetro como LaunchAgent do usuario.
 #
 # O venv (com --copies) vive DENTRO de um .app bundle minimo cujo Info.plist
 # declara NSBluetoothAlwaysUsageDescription: sem isso, o CoreBluetooth aborta
@@ -18,9 +18,14 @@ PLIST_PATH="$HOME/Library/LaunchAgents/$PLIST_LABEL.plist"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON="${PYTHON:-python3}"
 
-echo "-> criando bundle em $APP_DIR"
-mkdir -p "$MACOS_DIR"
-cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
+# O bundle (Info.plist), o venv e a assinatura so sao criados uma vez:
+# reescrever o plist ou o binario do Python quebraria o selo da assinatura e
+# invalidaria a permissao de Bluetooth ja concedida no TCC. Reinstalacoes
+# apenas atualizam dependencias e arquivos fora do bundle.
+if [ ! -x "$VENV_DIR/bin/python3" ]; then
+    echo "-> criando bundle em $APP_DIR"
+    mkdir -p "$MACOS_DIR"
+    cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
   "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -37,15 +42,10 @@ cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
     <key>CFBundleShortVersionString</key>
     <string>1.0.0</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>O Craudiometro envia o uso do Claude Code ao dispositivo ESP32 via Bluetooth.</string>
+    <string>O Craudiômetro envia o uso do Claude Code ao dispositivo ESP32 via Bluetooth.</string>
 </dict>
 </plist>
 PLIST
-
-# O venv (e a assinatura) so sao criados uma vez: recriar o binario do Python
-# ou reassinar o bundle invalidaria a permissao de Bluetooth ja concedida no
-# TCC. Reinstalacoes apenas atualizam dependencias e arquivos.
-if [ ! -x "$VENV_DIR/bin/python3" ]; then
     echo "-> criando venv em $VENV_DIR (com $PYTHON)"
     "$PYTHON" -m venv --copies "$VENV_DIR"
     "$VENV_DIR/bin/python" -m pip install --quiet --upgrade pip
@@ -99,4 +99,4 @@ launchctl unload "$PLIST_PATH" 2>/dev/null || true
 launchctl load "$PLIST_PATH"
 
 echo "-> instalado. Logs: ~/Library/Logs/craudiometro.log"
-echo "   Aprove o prompt de Bluetooth do 'Craudiometro' na primeira execucao."
+echo "   Aprove o prompt de Bluetooth do 'Craudiômetro' na primeira execucao."

@@ -1,6 +1,7 @@
 #include "ScreenManager.h"
 
 #include <Arduino.h>
+#include <cstring>
 
 #include "../drivers/EncoderDriver.h"
 #include "../screens/MenuScreen.h"
@@ -51,6 +52,20 @@ void ScreenManager::show(Screen *screen) {
     lv_indev_set_group(EncoderDriver::indev(), screen->group());
     screen->onShow();
     screen->onStateChanged();
+}
+
+void ScreenManager::showByName(const char *name) {
+    if (strcmp(name, "menu") == 0) {
+        beforeMenu_ = current_;
+        show(menu_);
+        return;
+    }
+    for (int i = 0; i < count_; i++) {
+        if (strcmp(screens_[i]->name(), name) == 0) {
+            show(screens_[i]);
+            return;
+        }
+    }
 }
 
 void ScreenManager::tick() {

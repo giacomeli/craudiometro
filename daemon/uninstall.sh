@@ -1,5 +1,5 @@
 #!/bin/bash
-# Remove o daemon do Craudiometro (LaunchAgent + arquivos instalados).
+# Remove o daemon do Craudiômetro (LaunchAgent + arquivos instalados).
 set -euo pipefail
 
 PLIST_LABEL="com.craudiometro.daemon"

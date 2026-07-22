@@ -1,4 +1,4 @@
-/* Configuracao minima do LVGL 9 para o Craudiometro.
+/* Configuracao minima do LVGL 9 para o Craudiômetro.
  * Opcoes nao definidas aqui caem nos defaults de lv_conf_internal.h. */
 
 #ifndef LV_CONF_H

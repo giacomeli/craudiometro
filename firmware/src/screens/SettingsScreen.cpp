@@ -12,7 +12,7 @@ namespace {
 
 constexpr const char *kResetIdleText = "resetar pareamento BLE";
 constexpr const char *kResetArmedText = "clique de novo p/ confirmar";
-constexpr const char *kFirmwareVersion = "craudiometro v1.0.0";
+constexpr const char *kFirmwareVersion = "Craudiometro v1.0.0";
 
 void timeoutChanged(lv_event_t *event) {
     auto *dropdown = static_cast<lv_obj_t *>(lv_event_get_target(event));

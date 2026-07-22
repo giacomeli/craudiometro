@@ -6,7 +6,7 @@
 lv_obj_t *makeChip(lv_obj_t *parent, const char *text);
 
 /* Header (icone do Craudinho + relogio central + badge do plano) e rodape
- * (asterisco pulsante + textos rotativos / "craudiometro") compartilhados
+ * (asterisco pulsante + textos rotativos / "Craudiômetro") compartilhados
  * entre telas.
  *
  * Uso pela tela dona: create() dentro do create() da tela; onShow()/onHide()

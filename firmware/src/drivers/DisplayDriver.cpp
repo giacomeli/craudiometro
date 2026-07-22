@@ -63,9 +63,16 @@ private:
 
 Gmt020Panel gfx;
 
-/* Buffer parcial de 60 linhas (240 * 60 * 2 bytes = 28,8 KB em DRAM). */
+/* Buffer parcial de 60 linhas (240 * 60 * 2 bytes = 28,8 KB em DRAM).
+ * alignas(4): o LVGL 9 exige alinhamento de LV_DRAW_BUF_ALIGN; uint16_t so
+ * garante 2, e um endereco nao multiplo de 4 trava o assert interno do LVGL
+ * num while(1) silencioso (dependia da sorte do layout do linker). */
 constexpr uint32_t kBufLines = 60;
-uint16_t drawBuf[DisplayDriver::kWidth * kBufLines];
+alignas(4) uint16_t drawBuf[DisplayDriver::kWidth * kBufLines];
+
+/* Screenshot em andamento: as faixas do proximo redesenho completo vao para a
+ * Serial alem do painel. */
+bool g_snapshotArmed = false;
 
 }  // namespace
 
@@ -83,6 +90,19 @@ void DisplayDriver::init() {
                            LV_DISPLAY_RENDER_MODE_PARTIAL);
 }
 
+bool DisplayDriver::snapshotArmed() {
+    return g_snapshotArmed;
+}
+
+void DisplayDriver::requestSnapshot() {
+    g_snapshotArmed = true;
+    /* Invalida tudo para o proximo ciclo redesenhar (e transmitir) a tela
+     * inteira, incluindo overlays da camada de topo. */
+    lv_obj_invalidate(lv_screen_active());
+    lv_obj_invalidate(lv_layer_top());
+    Serial.printf("SNAP BEGIN %d %d\n", kWidth, kHeight);
+}
+
 void DisplayDriver::flushCb(lv_display_t *disp, const lv_area_t *area, uint8_t *pxMap) {
     const uint32_t w = lv_area_get_width(area);
     const uint32_t h = lv_area_get_height(area);
@@ -91,6 +111,19 @@ void DisplayDriver::flushCb(lv_display_t *disp, const lv_area_t *area, uint8_t *
     gfx.setAddrWindow(area->x1, area->y1, w, h);
     gfx.writePixels(reinterpret_cast<uint16_t *>(pxMap), w * h);
     gfx.endWrite();
+
+    if (g_snapshotArmed) {
+        /* RGB565 nativo do LVGL (little-endian, antes do swap do LovyanGFX). */
+        Serial.printf("SNAP AREA %d %d %u %u\n", static_cast<int>(area->x1),
+                      static_cast<int>(area->y1), static_cast<unsigned>(w),
+                      static_cast<unsigned>(h));
+        Serial.write(pxMap, w * h * 2);
+        Serial.print("\n");
+        if (lv_display_flush_is_last(disp)) {
+            Serial.print("SNAP END\n");
+            g_snapshotArmed = false;
+        }
+    }
 
     lv_display_flush_ready(disp);
 }

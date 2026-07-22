@@ -1,4 +1,4 @@
-/* Craudiometro — dashboard de uso do Claude Code.
+/* Craudiômetro — dashboard de uso do Claude Code.
  * ESP32 DevKit + GMT020-02 (ST7789V) + encoder KY-040. */
 
 #include <Arduino.h>
@@ -20,11 +20,33 @@ DashboardScreen g_dashboard;
 MascotScreen g_mascot;
 SettingsScreen g_settings;
 
+/* Comandos pela Serial (usados por tools/screenshot.py):
+ *   shot            - transmite um screenshot da tela atual (protocolo SNAP)
+ *   screen <nome>   - troca para a tela do registro ("menu" abre o menu) */
+void handleSerialCommands() {
+    static char buf[48];
+    static size_t len = 0;
+    while (Serial.available() > 0) {
+        const char c = static_cast<char>(Serial.read());
+        if (c == '\n' || c == '\r') {
+            buf[len] = '\0';
+            len = 0;
+            if (strcmp(buf, "shot") == 0) {
+                DisplayDriver::requestSnapshot();
+            } else if (strncmp(buf, "screen ", 7) == 0) {
+                ScreenManager::instance().showByName(buf + 7);
+            }
+        } else if (len < sizeof(buf) - 1) {
+            buf[len++] = c;
+        }
+    }
+}
+
 }  // namespace
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("craudiometro: iniciando");
+    Serial.println("Craudiômetro: iniciando");
 
     Settings::instance().begin();
     DisplayDriver::init();
@@ -48,12 +70,13 @@ void setup() {
 
     BleService::init();
 
-    Serial.println("craudiometro: UI e BLE prontos");
+    Serial.println("Craudiômetro: UI e BLE prontos");
 }
 
 void loop() {
     lv_timer_handler();
     AppState::instance().process();
     ScreenManager::instance().tick();
+    handleSerialCommands();
     delay(5);
 }

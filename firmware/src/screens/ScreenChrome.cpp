@@ -10,12 +10,12 @@ namespace {
 /* Cor de destaque do rodape: a mesma do corpo do Craudinho. */
 const uint32_t kAccentHex = 0xCA7D6E;
 
-/* Textos rotativos enquanto sincroniza, no espirito do Claude Code
- * (ASCII: as fontes Montserrat embutidas nao tem acentos). */
+/* Textos rotativos enquanto sincroniza, como no Claude Code (em ingles,
+ * a pedido do usuario; ASCII por limitacao das fontes embutidas). */
 constexpr const char *kSpinnerTexts[] = {
-    "Matutando...", "Assando...",    "Cozinhando...", "Maquinando...",
-    "Ruminando...", "Tramando...",   "Fervilhando...", "Marinando...",
-    "Devaneando...", "Fritando...",
+    "Baking...",     "Brewing...",   "Pondering...", "Simmering...",
+    "Marinating...", "Noodling...",  "Tinkering...", "Percolating...",
+    "Mulling...",    "Vibing...",
 };
 constexpr uint8_t kSpinnerTextCount =
     sizeof(kSpinnerTexts) / sizeof(kSpinnerTexts[0]);
@@ -139,7 +139,7 @@ void ScreenChrome::updateSpinnerText() {
     const AppState &state = AppState::instance();
     const bool synced = state.bleConnected() && state.usage().syncedAtMs != 0;
     if (synced) {
-        lv_label_set_text(statusTextLabel_, "craudiometro");
+        lv_label_set_text(statusTextLabel_, "Craudiometro"); /* fontes embutidas sao ASCII */
     } else {
         lv_label_set_text(statusTextLabel_, kSpinnerTexts[textIdx_]);
     }

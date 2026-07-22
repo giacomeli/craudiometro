@@ -1,6 +1,6 @@
 #pragma once
 
-/* GATT server do Craudiometro (NimBLE).
+/* GATT server do Craudiômetro (NimBLE).
  *
  * O daemon no macOS escreve o payload JSON na characteristic RX:
  *   { "s": 45, "sr": 120, "w": 28, "wr": 7200, "st": "allowed", "ok": true }

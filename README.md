@@ -1,4 +1,4 @@
-# Craudiometro
+# Craudiômetro
 
 Dashboard fisico de mesa que mostra o uso do Claude Code (sessao de 5 horas e
 janela semanal) num ESP32 com display colorido, navegado por um encoder
@@ -11,12 +11,19 @@ Nenhum codigo ou asset daquele projeto foi copiado (ele nao possui licenca
 open-source): protocolo, firmware, daemon e arte foram criados do zero para
 este repositorio.
 
+| Dashboard | Craudinho | Configuracoes | Menu |
+| --- | --- | --- | --- |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Craudinho](docs/screenshots/craudinho.png) | ![Configuracoes](docs/screenshots/configuracoes.png) | ![Menu](docs/screenshots/menu.png) |
+
+Capturas reais do dispositivo, tiradas pela serial com `tools/screenshot.py`
+(ver [Screenshots do dispositivo](#screenshots-do-dispositivo)).
+
 ## Arquitetura
 
 ```mermaid
 %%{init: {'theme':'base','themeVariables':{'primaryColor':'#E3F2FD','primaryTextColor':'#0D47A1','primaryBorderColor':'#1976D2','lineColor':'#546E7A'}}}%%
 flowchart LR
-    accTitle: Arquitetura do Craudiometro
+    accTitle: Arquitetura do Craudiômetro
     accDescr: Daemon Python no macOS le o Keychain e a API da Anthropic e envia o uso por BLE ao ESP32, que renderiza no display e recebe input do encoder.
 
     classDef host fill:#FFF3E0,stroke:#EF6C00
@@ -125,7 +132,7 @@ PYTHON=/opt/homebrew/opt/python@3.13/bin/python3.13 ./install.sh
 - O daemon roda dentro de um bundle `Craudiometro.app` minimo: sem o
   `NSBluetoothAlwaysUsageDescription` do Info.plist, o macOS aborta processos
   do launchd que tocam Bluetooth sem nem exibir o prompt de permissao.
-- Na primeira execucao, aprove o prompt de Bluetooth do "Craudiometro". Se
+- Na primeira execucao, aprove o prompt de Bluetooth do "Craudiômetro". Se
   negar por engano, resete a decisao e reinicie o daemon:
 
   ```bash
@@ -168,6 +175,21 @@ python3 tools/png2lvgl.py              # converte para arrays C do LVGL (I4)
 Estados: dormindo (sem daemon), tranquilo (< 30%), trabalhando (30-70%) e
 frenetico (> 70%), usando a maior utilizacao entre sessao e semana. O mesmo
 desenho, em 32x32, e o icone do header da tela inicial.
+
+## Screenshots do dispositivo
+
+O firmware aceita comandos pela Serial: `shot` transmite a tela renderizada
+(protocolo SNAP, RGB565) e `screen <nome>` troca de tela. O script remonta os
+PNGs — pixels reais do display, com dados reais:
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install pyserial pillow   # uma vez
+.venv/bin/python tools/screenshot.py --all --out-dir docs/screenshots
+```
+
+Abrir a porta serial reseta o ESP32 (o driver do CH340 assere DTR); o script
+espera o boot e o primeiro payload BLE antes de capturar, e mescla ciclos de
+refresh ate cobrir a tela inteira.
 
 ## Como adicionar uma tela nova
 

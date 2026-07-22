@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Daemon do Craudiometro (macOS).
+"""Daemon do Craudiômetro (macOS).
 
 Le o token OAuth do Claude Code no Keychain, consulta o endpoint de uso da
 Anthropic (sem custo de tokens) e envia o resultado ao dispositivo ESP32 via
@@ -209,7 +209,7 @@ def run_tray() -> None:
 
     class CraudioTray(rumps.App):
         def __init__(self):
-            super().__init__("Craudiometro", icon=find_tray_icon("craudinho_off.png"),
+            super().__init__("Craudiômetro", icon=find_tray_icon("craudinho_off.png"),
                              quit_button=None)
             self.statusItem = rumps.MenuItem("iniciando...")
             self.sentItem = rumps.MenuItem("ultimo envio: --")

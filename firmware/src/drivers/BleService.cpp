@@ -1,9 +1,11 @@
 #include "BleService.h"
 
+#include <Arduino.h>
 #include <ArduinoJson.h>
 #include <NimBLEDevice.h>
 
 #include "../core/AppState.h"
+#include "DisplayDriver.h"
 
 namespace {
 
@@ -27,6 +29,12 @@ void parsePayload(const std::string &payload) {
     snprintf(data.planName, sizeof(data.planName), "%s", plan);
 
     AppState::instance().publishUsage(data);
+    /* Consumido por tools/screenshot.py para saber que ha dados reais.
+     * Calado durante um snapshot: este print roda na task do NimBLE e podia
+     * se intrometer no meio do fluxo binario do SNAP. */
+    if (!DisplayDriver::snapshotArmed()) {
+        Serial.println("BLE: payload aplicado");
+    }
 }
 
 class ServerCallbacks : public NimBLEServerCallbacks {
