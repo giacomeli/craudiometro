@@ -1,0 +1,3 @@
+bleak>=0.22
+httpx>=0.27
+rumps>=0.4
