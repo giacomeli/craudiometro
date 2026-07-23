@@ -9,6 +9,12 @@
   <img src="https://img.shields.io/badge/licen%C3%A7a-MIT-CA7D6E?style=flat-square&labelColor=1a1a1a" alt="Licença MIT">
 </p>
 
+<p align="center"><a href="README.en.md">Read in English</a></p>
+
+<p align="center">
+  <img src="promo-assets/craudiometro-social-preview-1280x640.png" alt="Banner do Craudiômetro: mascote Craudinho em pixel art ao lado das telas do dashboard com uso da sessão de 5 horas e da semana" width="800">
+</p>
+
 O Craudiômetro exibe a sessão de 5 horas e a janela semanal do Claude Code num
 ESP32 com display colorido, navegado por um encoder rotativo. O mascote do
 projeto é o Craudinho, releitura pixel-art do mascote do Claude Code que anima
@@ -21,7 +27,7 @@ este repositório.
 
 | Dashboard | Craudinho | Configurações | Menu |
 | --- | --- | --- | --- |
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Craudinho](docs/screenshots/craudinho.png) | ![Configurações](docs/screenshots/configuracoes.png) | ![Menu](docs/screenshots/menu.png) |
+| ![Tela do dashboard com uso da sessão de 5 horas e da semana](docs/screenshots/dashboard.png) | ![Tela do mascote Craudinho animado em pixel art](docs/screenshots/craudinho.png) | ![Tela de configurações do dispositivo](docs/screenshots/configuracoes.png) | ![Menu global de navegação entre telas](docs/screenshots/menu.png) |
 
 Capturas reais do dispositivo, tiradas pela serial com `tools/screenshot.py`
 (ver [Screenshots do dispositivo](#screenshots-do-dispositivo)).
