@@ -1,19 +1,27 @@
-# Craudiômetro
+<h1 align="center">Craudiômetro</h1>
 
-Dashboard fisico de mesa que mostra o uso do Claude Code (sessao de 5 horas e
-janela semanal) num ESP32 com display colorido, navegado por um encoder
-rotativo. O mascote do projeto e o Craudinho, releitura pixel-art do mascote
-do Claude Code que anima conforme a intensidade de uso — e dorme quando o
-daemon esta desligado.
+<p align="center">Dashboard físico de mesa que mostra, em tempo real, o uso do Claude Code.</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/plataforma-ESP32-CA7D6E?style=flat-square&labelColor=1a1a1a" alt="Plataforma ESP32">
+  <img src="https://img.shields.io/badge/UI-LVGL_9-CA7D6E?style=flat-square&labelColor=1a1a1a" alt="UI LVGL 9">
+  <img src="https://img.shields.io/badge/daemon-Python_3-CA7D6E?style=flat-square&labelColor=1a1a1a" alt="Daemon Python 3">
+  <img src="https://img.shields.io/badge/licen%C3%A7a-MIT-CA7D6E?style=flat-square&labelColor=1a1a1a" alt="Licença MIT">
+</p>
+
+O Craudiômetro exibe a sessão de 5 horas e a janela semanal do Claude Code num
+ESP32 com display colorido, navegado por um encoder rotativo. O mascote do
+projeto é o Craudinho, releitura pixel-art do mascote do Claude Code que anima
+conforme a intensidade de uso — e dorme quando o daemon está desligado.
 
 Inspirado conceitualmente no [Clawdmeter](https://github.com/HermannBjorgvin/Clawdmeter).
-Nenhum codigo ou asset daquele projeto foi copiado (ele nao possui licenca
+Nenhum código ou asset daquele projeto foi copiado (ele não possui licença
 open-source): protocolo, firmware, daemon e arte foram criados do zero para
-este repositorio.
+este repositório.
 
-| Dashboard | Craudinho | Configuracoes | Menu |
+| Dashboard | Craudinho | Configurações | Menu |
 | --- | --- | --- | --- |
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Craudinho](docs/screenshots/craudinho.png) | ![Configuracoes](docs/screenshots/configuracoes.png) | ![Menu](docs/screenshots/menu.png) |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Craudinho](docs/screenshots/craudinho.png) | ![Configurações](docs/screenshots/configuracoes.png) | ![Menu](docs/screenshots/menu.png) |
 
 Capturas reais do dispositivo, tiradas pela serial com `tools/screenshot.py`
 (ver [Screenshots do dispositivo](#screenshots-do-dispositivo)).
@@ -24,7 +32,7 @@ Capturas reais do dispositivo, tiradas pela serial com `tools/screenshot.py`
 %%{init: {'theme':'base','themeVariables':{'primaryColor':'#E3F2FD','primaryTextColor':'#0D47A1','primaryBorderColor':'#1976D2','lineColor':'#546E7A'}}}%%
 flowchart LR
     accTitle: Arquitetura do Craudiômetro
-    accDescr: Daemon Python no macOS le o Keychain e a API da Anthropic e envia o uso por BLE ao ESP32, que renderiza no display e recebe input do encoder.
+    accDescr: Daemon Python no macOS lê o Keychain e a API da Anthropic e envia o uso por BLE ao ESP32, que renderiza no display e recebe input do encoder.
 
     classDef host fill:#FFF3E0,stroke:#EF6C00
     classDef device fill:#E3F2FD,stroke:#1976D2
@@ -56,13 +64,13 @@ flowchart LR
 | --- | --- |
 | Microcontrolador | ESP32 DevKit (WROOM-32) |
 | Display | GMT020-02-7P ver 1.3 (IPS 2.0", ST7789V, 240x320, SPI) |
-| Encoder | KY-040 (rotativo com botao) |
+| Encoder | KY-040 (rotativo com botão) |
 
-### Fiacao do display
+### Fiação do display
 
-| Display | ESP32 | Funcao |
+| Display | ESP32 | Função |
 | --- | --- | --- |
-| VCC | 3V3 | Alimentacao |
+| VCC | 3V3 | Alimentação |
 | GND | GND | Terra |
 | SCL | GPIO 18 | SPI clock |
 | SDA | GPIO 23 | SPI data (MOSI) |
@@ -71,28 +79,28 @@ flowchart LR
 | CS | GPIO 5 | Chip select |
 
 Se as cores aparecerem em negativo, troque `CRAUDIO_DISPLAY_INVERT` para `0`
-em `firmware/platformio.ini` (ha variacoes entre lotes do painel).
+em `firmware/platformio.ini` (há variações entre lotes do painel).
 
-### Fiacao do encoder
+### Fiação do encoder
 
-| Encoder | ESP32 | Funcao |
+| Encoder | ESP32 | Função |
 | --- | --- | --- |
 | CLK | GPIO 32 | Quadratura A |
 | DT | GPIO 33 | Quadratura B |
-| SW | GPIO 25 | Botao |
-| + | 3V3 | Pull-ups do modulo |
+| SW | GPIO 25 | Botão |
+| + | 3V3 | Pull-ups do módulo |
 | GND | GND | Terra |
 
-## Navegacao
+## Navegação
 
-| Acao | Efeito |
+| Ação | Efeito |
 | --- | --- |
 | Girar | Move o foco entre widgets/itens |
 | Clique curto | Seleciona / confirma |
 | Clique longo (0,8 s) | Abre o menu global; dentro do menu, volta |
 
-Telas da v1: dashboard (sessao 5h + semana com countdowns), craudio (mascote
-animado), configuracoes (timeout de tela, tema, reset de pareamento BLE) e o
+Telas da v1: dashboard (sessão 5h + semana com countdowns), craudio (mascote
+animado), configurações (timeout de tela, tema, reset de pareamento BLE) e o
 menu global — gerado automaticamente do registro de telas em
 `firmware/src/main.cpp`.
 
@@ -111,7 +119,7 @@ Stack: Arduino + LVGL 9 + LovyanGFX (ST7789 com DMA) + NimBLE + ArduinoJson.
 
 ## Daemon (macOS)
 
-O daemon le o token OAuth do Claude Code no Keychain (service
+O daemon lê o token OAuth do Claude Code no Keychain (service
 `Claude Code-credentials`), consulta `GET /api/oauth/usage` (sem custo de
 tokens) e grava o resultado no dispositivo via BLE a cada 60 segundos.
 
@@ -121,19 +129,19 @@ cd daemon
 ./uninstall.sh  # remove tudo
 ```
 
-O instalador precisa de um Python com binario real (o stub do Xcode nao cria
-venv com `--copies`). Se o `python3` padrao falhar, indique outro:
+O instalador precisa de um Python com binário real (o stub do Xcode não cria
+venv com `--copies`). Se o `python3` padrão falhar, indique outro:
 
 ```bash
 PYTHON=/opt/homebrew/opt/python@3.13/bin/python3.13 ./install.sh
 ```
 
 - Logs: `~/Library/Logs/craudiometro.log`
-- O daemon roda dentro de um bundle `Craudiometro.app` minimo: sem o
+- O daemon roda dentro de um bundle `Craudiometro.app` mínimo: sem o
   `NSBluetoothAlwaysUsageDescription` do Info.plist, o macOS aborta processos
-  do launchd que tocam Bluetooth sem nem exibir o prompt de permissao.
-- Na primeira execucao, aprove o prompt de Bluetooth do "Craudiômetro". Se
-  negar por engano, resete a decisao e reinicie o daemon:
+  do launchd que tocam Bluetooth sem nem exibir o prompt de permissão.
+- Na primeira execução, aprove o prompt de Bluetooth do "Craudiômetro". Se
+  negar por engano, resete a decisão e reinicie o daemon:
 
   ```bash
   tccutil reset BluetoothAlways com.craudiometro.daemon
@@ -141,7 +149,7 @@ PYTHON=/opt/homebrew/opt/python@3.13/bin/python3.13 ./install.sh
   ```
 
 - Se o token do Keychain expirar, o daemon sinaliza falha ao dispositivo e se
-  recupera sozinho na proxima vez que o Claude Code renovar o token.
+  recupera sozinho na próxima vez que o Claude Code renovar o token.
 
 ### Protocolo BLE
 
@@ -151,20 +159,20 @@ Payload JSON:
 
 | Campo | Significado |
 | --- | --- |
-| `s` | Utilizacao da sessao 5h (0-100) |
-| `sr` | Minutos ate o reset da sessao |
-| `w` | Utilizacao da semana (0-100) |
-| `wr` | Minutos ate o reset semanal |
+| `s` | Utilização da sessão 5h (0-100) |
+| `sr` | Minutos até o reset da sessão |
+| `w` | Utilização da semana (0-100) |
+| `wr` | Minutos até o reset semanal |
 | `st` | Status (`allowed` quando tudo normal) |
 | `ok` | Coleta na API bem-sucedida |
 | `pl` | Nome do plano da conta (ex.: `Max`) |
-| `tm` | Minutos desde a meia-noite no fuso do Mac (base do relogio) |
+| `tm` | Minutos desde a meia-noite no fuso do Mac (base do relógio) |
 
 ## Craudinho (mascote)
 
 Releitura pixel-art do mascote do Claude Code (Clawd, da Anthropic), desenhada
-do zero por script — nenhum arquivo de asset de terceiros e usado. O mascote
-original pertence a Anthropic; esta releitura destina-se a uso pessoal no
+do zero por script — nenhum arquivo de asset de terceiros é usado. O mascote
+original pertence à Anthropic; esta releitura destina-se a uso pessoal no
 dispositivo.
 
 ```bash
@@ -173,8 +181,8 @@ python3 tools/png2lvgl.py              # converte para arrays C do LVGL (I4)
 ```
 
 Estados: dormindo (sem daemon), tranquilo (< 30%), trabalhando (30-70%) e
-frenetico (> 70%), usando a maior utilizacao entre sessao e semana. O mesmo
-desenho, em 32x32, e o icone do header da tela inicial.
+frenético (> 70%), usando a maior utilização entre sessão e semana. O mesmo
+desenho, em 32x32, é o ícone do header da tela inicial.
 
 ## Screenshots do dispositivo
 
@@ -187,14 +195,61 @@ python3 -m venv .venv && .venv/bin/pip install pyserial pillow   # uma vez
 .venv/bin/python tools/screenshot.py --all --out-dir docs/screenshots
 ```
 
-Abrir a porta serial reseta o ESP32 (o driver do CH340 assere DTR); o script
+Abrir a porta serial reseta o ESP32 (o driver do CH340 aciona o DTR); o script
 espera o boot e o primeiro payload BLE antes de capturar, e mescla ciclos de
-refresh ate cobrir a tela inteira.
+refresh até cobrir a tela inteira.
 
 ## Como adicionar uma tela nova
 
 1. Crie uma classe que herda de `Screen` em `firmware/src/screens/`.
 2. Implemente `name()`, `create()` e, se precisar de dados, `onStateChanged()`.
-3. Registre a instancia com `manager.registerScreen(...)` em `main.cpp`.
+3. Registre a instância com `manager.registerScreen(...)` em `main.cpp`.
 
 O menu global lista a tela automaticamente.
+
+## Como colaborar
+
+Contribuições são bem-vindas: issues, correções, telas novas e melhorias na
+arte. Para mudanças grandes, abra uma issue antes do PR para alinhar a ideia.
+
+### Onde mexer
+
+| Área | Onde | Stack |
+| --- | --- | --- |
+| Firmware (UI, BLE, telas) | `firmware/` | Arduino + LVGL 9 + LovyanGFX + NimBLE |
+| Daemon de coleta (macOS) | `daemon/` | Python 3 (bleak, httpx, rumps) |
+| Arte do mascote | `tools/gen_craudio_sprites.py` | Python + Pillow |
+| Captura de screenshots | `tools/screenshot.py` | pyserial + Pillow |
+
+### Fluxo
+
+1. Faça fork e crie um branch a partir de `main`.
+2. Firmware: `cd firmware && pio run` precisa compilar limpo. Mudanças de UI ou
+   BLE devem ser testadas no dispositivo (`pio run -t upload`).
+3. Daemon: rode em foreground para depurar:
+
+   ```bash
+   cd daemon
+   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+   .venv/bin/python craudiometro_daemon.py
+   ```
+
+4. Mudou uma tela existente? Regenere as capturas do README com
+   `tools/screenshot.py` (ver [Screenshots do dispositivo](#screenshots-do-dispositivo)).
+5. Tela nova? Siga [Como adicionar uma tela nova](#como-adicionar-uma-tela-nova).
+
+### Convenções
+
+- Commits: Conventional Commits em pt-BR (`feat:`, `fix:`, `docs:`, ...), com
+  verbo no infinitivo e sem emojis.
+- Código e identificadores em inglês; documentação em pt-BR.
+- Diagramas em Mermaid; sem emojis em código, UI ou documentação.
+- Não inclua assets de terceiros: toda a arte é gerada por script (ver
+  [Craudinho (mascote)](#craudinho-mascote)).
+
+Ao contribuir, você concorda que sua contribuição seja licenciada sob a
+[licença MIT](LICENSE) do projeto.
+
+## Licença
+
+Distribuído sob a licença MIT — veja [LICENSE](LICENSE).
