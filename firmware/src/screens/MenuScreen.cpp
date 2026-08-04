@@ -1,6 +1,7 @@
 #include "MenuScreen.h"
 
 #include "../core/ScreenManager.h"
+#include "../drivers/DisplayDriver.h"
 
 namespace {
 
@@ -20,7 +21,7 @@ void MenuScreen::create() {
     lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 10);
 
     list_ = lv_list_create(root_);
-    lv_obj_set_size(list_, 220, 260);
+    lv_obj_set_size(list_, DisplayDriver::kWidth - 20, 260);
     lv_obj_align(list_, LV_ALIGN_BOTTOM_MID, 0, -10);
 
     ScreenManager &manager = ScreenManager::instance();

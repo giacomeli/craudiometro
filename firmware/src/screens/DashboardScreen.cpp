@@ -3,6 +3,7 @@
 #include <cstdio>
 
 #include "../core/AppState.h"
+#include "../drivers/DisplayDriver.h"
 
 namespace {
 
@@ -44,8 +45,11 @@ int32_t remainingMin(int32_t resetMin, int32_t syncAgeMin) {
 }  // namespace
 
 DashboardScreen::UsageCard DashboardScreen::makeCard(int y, const char *chipText) {
+    /* Margem de 12px de cada lado da tela; o cartao ocupa o resto da largura. */
+    const int32_t cardWidth = DisplayDriver::kWidth - 24;
+
     lv_obj_t *card = lv_obj_create(root_);
-    lv_obj_set_size(card, 216, 96);
+    lv_obj_set_size(card, cardWidth, 96);
     lv_obj_set_pos(card, 12, y);
     lv_obj_set_style_pad_all(card, 12, 0);
     lv_obj_remove_flag(card, LV_OBJ_FLAG_SCROLLABLE);
@@ -60,7 +64,8 @@ DashboardScreen::UsageCard DashboardScreen::makeCard(int y, const char *chipText
     lv_obj_align(chip, LV_ALIGN_TOP_RIGHT, 0, 0);
 
     result.bar = lv_bar_create(card);
-    lv_obj_set_size(result.bar, 192, 10);
+    /* Padding interno de 12px de cada lado do cartao (pad_all acima). */
+    lv_obj_set_size(result.bar, cardWidth - 24, 10);
     lv_obj_align(result.bar, LV_ALIGN_BOTTOM_LEFT, 0, -26);
     lv_bar_set_range(result.bar, 0, 100);
 

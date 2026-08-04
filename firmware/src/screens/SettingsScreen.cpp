@@ -4,6 +4,7 @@
 
 #include "../core/Settings.h"
 #include "../drivers/BleService.h"
+#include "../drivers/DisplayDriver.h"
 
 void settingsResetClicked(lv_event_t *event);
 void settingsDisarmTimerCb(lv_timer_t *timer);
@@ -73,7 +74,7 @@ void SettingsScreen::create() {
     lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 10);
 
     lv_obj_t *panel = lv_obj_create(root_);
-    lv_obj_set_size(panel, 224, 240);
+    lv_obj_set_size(panel, DisplayDriver::kWidth - 16, 240);
     lv_obj_align(panel, LV_ALIGN_TOP_MID, 0, 40);
     lv_obj_set_flex_flow(panel, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_style_pad_row(panel, 10, 0);

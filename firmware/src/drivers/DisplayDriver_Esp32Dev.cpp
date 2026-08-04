@@ -18,6 +18,9 @@ constexpr int kPinDc = 2;
 constexpr int kPinCs = 5;
 constexpr int kPinRst = 4;
 
+constexpr int32_t kPanelWidth = 240;
+constexpr int32_t kPanelHeight = 320;
+
 class Gmt020Panel : public lgfx::LGFX_Device {
 public:
     Gmt020Panel() {
@@ -41,8 +44,8 @@ public:
             cfg.pin_cs = kPinCs;
             cfg.pin_rst = kPinRst;
             cfg.pin_busy = -1;
-            cfg.panel_width = DisplayDriver::kWidth;
-            cfg.panel_height = DisplayDriver::kHeight;
+            cfg.panel_width = kPanelWidth;
+            cfg.panel_height = kPanelHeight;
             cfg.offset_x = 0;
             cfg.offset_y = 0;
             cfg.offset_rotation = 0;
@@ -68,13 +71,16 @@ Gmt020Panel gfx;
  * garante 2, e um endereco nao multiplo de 4 trava o assert interno do LVGL
  * num while(1) silencioso (dependia da sorte do layout do linker). */
 constexpr uint32_t kBufLines = 60;
-alignas(4) uint16_t drawBuf[DisplayDriver::kWidth * kBufLines];
+alignas(4) uint16_t drawBuf[kPanelWidth * kBufLines];
 
 /* Screenshot em andamento: as faixas do proximo redesenho completo vao para a
  * Serial alem do painel. */
 bool g_snapshotArmed = false;
 
 }  // namespace
+
+const int32_t DisplayDriver::kWidth = kPanelWidth;
+const int32_t DisplayDriver::kHeight = kPanelHeight;
 
 void DisplayDriver::init() {
     gfx.init();
