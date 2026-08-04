@@ -147,7 +147,12 @@ desse ambiente, sem passo manual extra.
 #### Variante paisagem
 
 Mesma placa física, girada 90 graus (320x172 em vez de 172x320) — mesma
-fiação (nenhuma), mesma tabela de navegação pelo botão BOOT acima:
+fiação (nenhuma), mesma tabela de navegação pelo botão BOOT acima.
+
+A orientação é escolhida em tempo de compilação pelo ambiente que você
+flasha — não é uma configuração no dispositivo (não tem opção na tela de
+configurações nem em `firmware/include/lv_conf.h`). Para trocar de
+orientação, flashe o outro ambiente; o último gravado é o que roda:
 
 ```bash
 pio run -e esp32-c6-lcd-147-landscape            # compila

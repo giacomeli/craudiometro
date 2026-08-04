@@ -151,7 +151,12 @@ first `pio run` for that environment, no extra manual step.
 #### Landscape variant
 
 Same physical board, rotated 90 degrees (320x172 instead of 172x320) —
-same wiring (none), same BOOT-button navigation table above:
+same wiring (none), same BOOT-button navigation table above.
+
+Orientation is a compile-time choice, picked by which environment you
+flash — it's not a device setting (no option in the settings screen or in
+`firmware/include/lv_conf.h`). To switch orientation, flash the other
+environment; whichever was flashed last is what runs:
 
 ```bash
 pio run -e esp32-c6-lcd-147-landscape            # build
