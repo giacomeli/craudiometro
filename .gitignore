@@ -1,5 +1,7 @@
 # PlatformIO
 firmware/.pio/
+# Gerado pelo component manager do ESP-IDF ao compilar para o ESP32-C6.
+firmware/src/idf_component.yml
 
 # Python
 __pycache__/

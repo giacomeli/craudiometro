@@ -115,12 +115,14 @@ global menu — generated automatically from the screen registry in
 
 ## Supported boards
 
-The firmware builds for two boards. Each one has its own driver files
-(`firmware/src/drivers/*_Esp32Dev.cpp` / `*_C6Lcd147.cpp`), selected via
-`build_src_filter` per environment in `firmware/platformio.ini` — one
-board's files never enter the other's build. `pio run`/`pio run -t upload`
-without `-e` always targets the ESP32 DevKit (default); the new board
-requires an explicit `-e esp32-c6-lcd-147`.
+The firmware builds for three environments. Each one has its own driver
+files (`firmware/src/drivers/*_Esp32Dev.cpp` / `*_C6Lcd147.cpp` /
+`*_C6Lcd147Landscape.cpp`), selected via `build_src_filter` per
+environment in `firmware/platformio.ini` — one never enters another's
+build. `pio run`/`pio run -t upload` without `-e` always targets the
+ESP32 DevKit (default); the C6 environments require an explicit
+`-e esp32-c6-lcd-147` (portrait) or `-e esp32-c6-lcd-147-landscape`
+(landscape).
 
 ### Waveshare ESP32-C6-LCD-1.47-H
 
@@ -145,6 +147,16 @@ Uses the [pioarduino](https://github.com/pioarduino/platform-espressif32)
 platform (community fork with Arduino support for ESP32-C6; PlatformIO's
 official platform doesn't support it yet) — downloaded automatically on the
 first `pio run` for that environment, no extra manual step.
+
+#### Landscape variant
+
+Same physical board, rotated 90 degrees (320x172 instead of 172x320) —
+same wiring (none), same BOOT-button navigation table above:
+
+```bash
+pio run -e esp32-c6-lcd-147-landscape            # build
+pio run -e esp32-c6-lcd-147-landscape -t upload  # flash over USB
+```
 
 ## Firmware
 

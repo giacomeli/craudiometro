@@ -12,6 +12,10 @@ class DisplayDriver {
 public:
     static const int32_t kWidth;
     static const int32_t kHeight;
+    /* true quando o board compilado usa orientacao paisagem (largura >
+     * altura) — telas que precisam de um layout diferente por orientacao
+     * (nao so por largura) checam esta flag em vez de comparar kWidth. */
+    static const bool kLandscape;
 
     static void init();
 

@@ -44,13 +44,11 @@ int32_t remainingMin(int32_t resetMin, int32_t syncAgeMin) {
 
 }  // namespace
 
-DashboardScreen::UsageCard DashboardScreen::makeCard(int y, const char *chipText) {
-    /* Margem de 12px de cada lado da tela; o cartao ocupa o resto da largura. */
-    const int32_t cardWidth = DisplayDriver::kWidth - 24;
-
+DashboardScreen::UsageCard DashboardScreen::makeCard(int x, int y, int w, int h,
+                                                      const char *chipText) {
     lv_obj_t *card = lv_obj_create(root_);
-    lv_obj_set_size(card, cardWidth, 96);
-    lv_obj_set_pos(card, 12, y);
+    lv_obj_set_size(card, w, h);
+    lv_obj_set_pos(card, x, y);
     lv_obj_set_style_pad_all(card, 12, 0);
     lv_obj_remove_flag(card, LV_OBJ_FLAG_SCROLLABLE);
 
@@ -65,7 +63,7 @@ DashboardScreen::UsageCard DashboardScreen::makeCard(int y, const char *chipText
 
     result.bar = lv_bar_create(card);
     /* Padding interno de 12px de cada lado do cartao (pad_all acima). */
-    lv_obj_set_size(result.bar, cardWidth - 24, 10);
+    lv_obj_set_size(result.bar, w - 24, 10);
     lv_obj_align(result.bar, LV_ALIGN_BOTTOM_LEFT, 0, -26);
     lv_bar_set_range(result.bar, 0, 100);
 
@@ -83,8 +81,19 @@ void DashboardScreen::create() {
     lv_obj_remove_flag(root_, LV_OBJ_FLAG_SCROLLABLE);
 
     chrome_.create(root_);
-    sessionCard_ = makeCard(54, "sessao");
-    weekCard_ = makeCard(158, "semana");
+
+    if (DisplayDriver::kLandscape) {
+        /* Cartoes lado a lado na faixa de conteudo entre header e footer
+         * (~44 a ~142px, ver ScreenChrome). */
+        const int32_t w = (DisplayDriver::kWidth - 24) / 2;
+        sessionCard_ = makeCard(8, 44, w, 92, "sessao");
+        weekCard_ = makeCard(16 + w, 44, w, 92, "semana");
+    } else {
+        /* Margem de 12px de cada lado da tela; o cartao ocupa o resto da largura. */
+        const int32_t w = DisplayDriver::kWidth - 24;
+        sessionCard_ = makeCard(12, 54, w, 96, "sessao");
+        weekCard_ = makeCard(12, 158, w, 96, "semana");
+    }
 }
 
 void DashboardScreen::onShow() {

@@ -83,6 +83,7 @@ bool g_snapshotArmed = false;
 
 const int32_t DisplayDriver::kWidth = kPanelWidth;
 const int32_t DisplayDriver::kHeight = kPanelHeight;
+const bool DisplayDriver::kLandscape = false;
 
 void DisplayDriver::init() {
     pinMode(kPinBacklight, OUTPUT);
