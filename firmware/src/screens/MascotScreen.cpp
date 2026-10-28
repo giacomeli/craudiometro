@@ -4,6 +4,7 @@
 
 #include "../assets/craudio_sprites.h"
 #include "../core/AppState.h"
+#include "../drivers/DisplayDriver.h"
 
 namespace {
 
@@ -31,12 +32,26 @@ void MascotScreen::create() {
 
     image_ = lv_image_create(root_);
     lv_image_set_src(image_, kCraudioSleep[0]);
-    lv_obj_align(image_, LV_ALIGN_CENTER, 0, -14);
 
     captionLabel_ = lv_label_create(root_);
     lv_label_set_text(captionLabel_, "");
     lv_obj_set_style_text_opa(captionLabel_, LV_OPA_60, 0);
-    lv_obj_align(captionLabel_, LV_ALIGN_CENTER, 0, 72);
+
+    if (DisplayDriver::kLandscape) {
+        /* Sprite de 128x128 nao cabe na faixa de conteudo de ~98px de
+         * altura (ver ScreenChrome): encolhe e poe lado a lado com a
+         * legenda em vez de empilhado. */
+        lv_image_set_scale(image_, 170); /* ~66%, ~84x84 efetivos */
+        lv_obj_align(image_, LV_ALIGN_LEFT_MID, 24, 0);
+
+        lv_obj_set_width(captionLabel_, 150);
+        lv_label_set_long_mode(captionLabel_, LV_LABEL_LONG_WRAP);
+        lv_obj_set_style_text_align(captionLabel_, LV_TEXT_ALIGN_CENTER, 0);
+        lv_obj_align(captionLabel_, LV_ALIGN_RIGHT_MID, -16, 0);
+    } else {
+        lv_obj_align(image_, LV_ALIGN_CENTER, 0, -14);
+        lv_obj_align(captionLabel_, LV_ALIGN_CENTER, 0, 72);
+    }
 }
 
 void MascotScreen::onShow() {

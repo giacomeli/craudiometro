@@ -2,12 +2,20 @@
 
 #include <lvgl.h>
 
-/* Inicializa o painel GMT020-02 (ST7789V via SPI) com LovyanGFX e registra o
- * display no LVGL. Deve ser chamado uma unica vez, antes de qualquer widget. */
+/* Inicializa o painel do board (ST7789 via SPI, LovyanGFX) e registra o
+ * display no LVGL. Deve ser chamado uma unica vez, antes de qualquer widget.
+ *
+ * kWidth/kHeight sao definidos no .cpp especifico do board compilado
+ * (DisplayDriver_Esp32Dev.cpp ou DisplayDriver_C6Lcd147.cpp, selecionado por
+ * build_src_filter no platformio.ini) — este header nao assume nenhum board. */
 class DisplayDriver {
 public:
-    static constexpr int32_t kWidth = 240;
-    static constexpr int32_t kHeight = 320;
+    static const int32_t kWidth;
+    static const int32_t kHeight;
+    /* true quando o board compilado usa orientacao paisagem (largura >
+     * altura) — telas que precisam de um layout diferente por orientacao
+     * (nao so por largura) checam esta flag em vez de comparar kWidth. */
+    static const bool kLandscape;
 
     static void init();
 

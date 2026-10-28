@@ -4,6 +4,7 @@
 
 #include "../core/Settings.h"
 #include "../drivers/BleService.h"
+#include "../drivers/DisplayDriver.h"
 
 void settingsResetClicked(lv_event_t *event);
 void settingsDisarmTimerCb(lv_timer_t *timer);
@@ -30,13 +31,13 @@ void themeChanged(lv_event_t *event) {
     ESP.restart();
 }
 
-lv_obj_t *makeRow(lv_obj_t *parent, const char *text) {
+lv_obj_t *makeRow(lv_obj_t *parent, const char *text, int padAll = 8) {
     lv_obj_t *row = lv_obj_create(parent);
     lv_obj_set_size(row, lv_pct(100), LV_SIZE_CONTENT);
     lv_obj_set_flex_flow(row, LV_FLEX_FLOW_ROW);
     lv_obj_set_flex_align(row, LV_FLEX_ALIGN_SPACE_BETWEEN,
                           LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
-    lv_obj_set_style_pad_all(row, 8, 0);
+    lv_obj_set_style_pad_all(row, padAll, 0);
 
     lv_obj_t *label = lv_label_create(row);
     lv_label_set_text(label, text);
@@ -72,14 +73,24 @@ void SettingsScreen::create() {
     lv_obj_set_style_text_font(title, &lv_font_montserrat_20, 0);
     lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 10);
 
+    const bool landscape = DisplayDriver::kLandscape;
+    const int rowPad = landscape ? 4 : 8;
+
     lv_obj_t *panel = lv_obj_create(root_);
-    lv_obj_set_size(panel, 224, 240);
-    lv_obj_align(panel, LV_ALIGN_TOP_MID, 0, 40);
+    if (landscape) {
+        /* Painel compacto: so ~126px de altura util (172 - 26 de titulo -
+         * 20 de versao/margem) — linhas mais apertadas que no retrato. */
+        lv_obj_set_size(panel, DisplayDriver::kWidth - 16, DisplayDriver::kHeight - 46);
+        lv_obj_align(panel, LV_ALIGN_TOP_MID, 0, 26);
+    } else {
+        lv_obj_set_size(panel, DisplayDriver::kWidth - 16, 240);
+        lv_obj_align(panel, LV_ALIGN_TOP_MID, 0, 40);
+    }
     lv_obj_set_flex_flow(panel, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(panel, 10, 0);
+    lv_obj_set_style_pad_row(panel, landscape ? 4 : 10, 0);
 
     /* Timeout de tela. */
-    lv_obj_t *timeoutRow = makeRow(panel, "timeout de tela");
+    lv_obj_t *timeoutRow = makeRow(panel, "timeout de tela", rowPad);
     lv_obj_t *dropdown = lv_dropdown_create(timeoutRow);
     lv_dropdown_set_options(dropdown, "sempre acesa\n1 min\n5 min\n15 min");
     lv_dropdown_set_selected(dropdown, Settings::instance().screenTimeoutIdx());
@@ -88,7 +99,7 @@ void SettingsScreen::create() {
     lv_group_add_obj(group_, dropdown);
 
     /* Tema. */
-    lv_obj_t *themeRow = makeRow(panel, "tema claro");
+    lv_obj_t *themeRow = makeRow(panel, "tema claro", rowPad);
     lv_obj_t *sw = lv_switch_create(themeRow);
     if (Settings::instance().theme() == Settings::Theme::Light) {
         lv_obj_add_state(sw, LV_STATE_CHECKED);

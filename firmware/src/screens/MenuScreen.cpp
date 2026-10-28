@@ -1,6 +1,7 @@
 #include "MenuScreen.h"
 
 #include "../core/ScreenManager.h"
+#include "../drivers/DisplayDriver.h"
 
 namespace {
 
@@ -20,7 +21,9 @@ void MenuScreen::create() {
     lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 10);
 
     list_ = lv_list_create(root_);
-    lv_obj_set_size(list_, 220, 260);
+    /* kHeight-60 == 260 nos boards retrato (320-60); adapta sozinho pro
+     * paisagem do C6 (172-60=112). */
+    lv_obj_set_size(list_, DisplayDriver::kWidth - 20, DisplayDriver::kHeight - 60);
     lv_obj_align(list_, LV_ALIGN_BOTTOM_MID, 0, -10);
 
     ScreenManager &manager = ScreenManager::instance();

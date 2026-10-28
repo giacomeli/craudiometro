@@ -113,6 +113,56 @@ v1 screens: dashboard (5-hour session + week with countdowns), craudio
 global menu — generated automatically from the screen registry in
 `firmware/src/main.cpp`.
 
+## Supported boards
+
+The firmware builds for three environments. Each one has its own driver
+files (`firmware/src/drivers/*_Esp32Dev.cpp` / `*_C6Lcd147.cpp` /
+`*_C6Lcd147Landscape.cpp`), selected via `build_src_filter` per
+environment in `firmware/platformio.ini` — one never enters another's
+build. `pio run`/`pio run -t upload` without `-e` always targets the
+ESP32 DevKit (default); the C6 environments require an explicit
+`-e esp32-c6-lcd-147` (portrait) or `-e esp32-c6-lcd-147-landscape`
+(landscape).
+
+### Waveshare ESP32-C6-LCD-1.47-H
+
+Its ST7789 display (172x320) is already built into the board — no wiring
+needed. There's no onboard rotary encoder: navigation uses only the BOOT
+button (GPIO9), with the encoder signals synthesized from click cadence:
+
+| Action | Effect |
+| --- | --- |
+| Single click | Advances focus between widgets/items (like "rotate"; forward only) |
+| Double click (within ~350 ms) | Selects / confirms |
+| Long press (0.8 s) | Opens the global menu; inside the menu, goes back |
+
+```bash
+cd firmware
+pio run -e esp32-c6-lcd-147            # build
+pio run -e esp32-c6-lcd-147 -t upload  # flash over USB
+pio device monitor -e esp32-c6-lcd-147 # serial log (native USB-CDC, 115200)
+```
+
+Uses the [pioarduino](https://github.com/pioarduino/platform-espressif32)
+platform (community fork with Arduino support for ESP32-C6; PlatformIO's
+official platform doesn't support it yet) — downloaded automatically on the
+first `pio run` for that environment, no extra manual step.
+
+#### Landscape variant
+
+Same physical board, rotated 90 degrees (320x172 instead of 172x320) —
+same wiring (none), same BOOT-button navigation table above.
+
+Orientation is a compile-time choice, picked by which environment you
+flash — it's not a device setting (no option in the settings screen or in
+`firmware/include/lv_conf.h`). To switch orientation, flash the other
+environment; whichever was flashed last is what runs:
+
+```bash
+pio run -e esp32-c6-lcd-147-landscape            # build
+pio run -e esp32-c6-lcd-147-landscape -t upload  # flash over USB
+```
+
 ## Firmware
 
 Requirements: [PlatformIO](https://platformio.org/) (`brew install platformio`).

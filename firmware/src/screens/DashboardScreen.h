@@ -21,7 +21,7 @@ private:
         lv_obj_t *resetLabel = nullptr;
     };
 
-    UsageCard makeCard(int y, const char *chipText);
+    UsageCard makeCard(int x, int y, int w, int h, const char *chipText);
     void refresh();
     void refreshCard(const UsageCard &card, int pct, int32_t remainingMin);
     static void timerCb(lv_timer_t *timer);
